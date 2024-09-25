@@ -131,8 +131,7 @@ class _mybookingState extends State<mybooking> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween, // Aligns items at both ends
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
                                 child: Column(
@@ -165,19 +164,14 @@ class _mybookingState extends State<mybooking> {
                                   ],
                                 ),
                               ),
-                              SizedBox(
-                                  width: 16), // Space between text and image
+                              SizedBox(width: 16),
                               ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                    10), // Rounded corners
+                                borderRadius: BorderRadius.circular(10),
                                 child: Image.asset(
                                   'assets/${booking['serviceProvider'].toLowerCase()}.png',
-
-                                  // Path to the service image
-                                  height: 60, // Adjust height as needed
-                                  width: 60, // Adjust width as needed
-                                  fit: BoxFit
-                                      .cover, // Ensure the image covers the space
+                                  height: 60,
+                                  width: 60,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ],

@@ -45,8 +45,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
           selectedServices: _selectedServices,
           subTotal: _currentCharge,
           selectedDateTime: widget.selectedDateTime, // Pass the date and time
-          serviceImagePath:
-              widget.serviceImagePath, // Pass the service image path
+          serviceImagePath: widget.serviceImagePath,
         ),
       ),
     );
@@ -66,7 +65,6 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
       ),
       body: Column(
         children: [
-          // Service Image at the top
           Container(
             margin: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(

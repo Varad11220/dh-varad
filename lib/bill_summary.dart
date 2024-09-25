@@ -104,10 +104,8 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
                 ),
               ),
             ),
-
             const SizedBox(height: 6),
 
-            // Display the service image with the same styling as in ElectricianBookingPage
             Container(
               margin: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -212,7 +210,65 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  // Booking logic remains unchanged...
+                  if (userPhoneNumber == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('User phone number not found')),
+                    );
+                    return;
+                  }
+
+                  final dateTime =
+                      DateFormat('yyyy-MM-dd-HH:mm').format(DateTime.now());
+
+                  final databaseRef = FirebaseDatabase.instance
+                      .ref('serviceBooking/$userPhoneNumber')
+                      .child(dateTime);
+                  await databaseRef.set({
+                    'service_provider': yourSelectedServiceName,
+                    'servicesDetails': {
+                      'services': widget.selectedServices
+                          .map((service) => {
+                                'name': service.name,
+                                'price': service.price,
+                              })
+                          .toList(),
+                      'serviceTime':
+                          DateFormat('HH:mm').format(widget.selectedDateTime),
+                      'serviceDate': DateFormat('yyyy-MM-dd')
+                          .format(widget.selectedDateTime),
+                    },
+                    'bookingTime':
+                        DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
+                    'cost': {
+                      'subTotal': widget.subTotal,
+                      'gst': gst,
+                      'totalAmount': totalAmount,
+                    },
+                  }).then((_) async {
+                    if (await _isPermissionGranted()) {
+                      _sendMessage(
+                        userPhoneNumber!,
+                        "Your total bill is ₹ $totalAmount",
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text(
+                                "SMS permission is required to send the message.")),
+                      );
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Booking confirmed!')),
+                    );
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  }).catchError((error) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text('Failed to confirm booking: $error')),
+                    );
+                  });
                 },
                 child: const Text(
                   'Confirm Booking',
