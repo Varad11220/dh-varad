@@ -33,8 +33,7 @@ class _mybookingState extends State<mybooking> {
         if (snapshot.exists) {
           final data = snapshot.value as Map<Object?, Object?>?;
           if (data != null) {
-            // Clear previous data before adding new entries
-            bookings.clear();
+            bookings.clear(); // Clear previous data before adding new entries
 
             // Loop through each booking entry
             data.forEach((bookingID, booking) {
@@ -62,6 +61,8 @@ class _mybookingState extends State<mybooking> {
                     'serviceDate': serviceDate,
                     'services': services,
                     'serviceProvider': serviceProvider,
+                    'imagePath':
+                        _getImagePath(serviceProvider), // Get the image path
                   });
                 }
               }
@@ -98,6 +99,32 @@ class _mybookingState extends State<mybooking> {
     }
   }
 
+  // Method to get the image path based on service provider name
+  String _getImagePath(String? serviceProvider) {
+    switch (serviceProvider) {
+      case 'Electrician':
+        return 'assets/electrician.png';
+      case 'Plumber':
+        return 'assets/plumber.png';
+      case 'Househelp':
+        return 'assets/househelp.png';
+      case 'Laundry':
+        return 'assets/laundry.png';
+      case 'Gardener':
+        return 'assets/gardener.png';
+      case 'Grocery':
+        return 'assets/grocery.png';
+      case 'Bicycle Booking':
+        return 'assets/bicycle.png';
+      case 'Local Transport':
+        return 'assets/transport.png';
+      case 'Turf & Club':
+        return 'assets/turf.png';
+      default:
+        return 'assets/default.png';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
@@ -119,64 +146,25 @@ class _mybookingState extends State<mybooking> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => BookingDetailPage(
-                              services: booking['services'],
+                              serviceProvider: booking['serviceProvider'],
+                              selectedService: booking[
+                                      'services'] // Pass the selected service
+                                  .map((service) => service['name'])
+                                  .join(", "), // Join service names
                               serviceDate: booking['serviceDate'],
                               serviceTime: booking['serviceTime'],
+                              totalCost: booking['totalAmount'].toDouble(),
                             ),
                           ),
                         );
                       },
-                      child: Card(
-                        margin: EdgeInsets.all(10),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Service Provider: ${booking['serviceProvider']}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      "Booking Time: ${booking['bookingTime']}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      "Service Time: ${booking['serviceTime']}",
-                                      style: TextStyle(fontSize: 14),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      "Total Cost: ₹${booking['totalAmount']}",
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.green),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 16),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  'assets/${booking['serviceProvider'].toLowerCase()}.png',
-                                  height: 60,
-                                  width: 60,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                      child: BookingCard(
+                        serviceProvider: booking['serviceProvider'],
+                        bookingTime: booking['bookingTime'],
+                        serviceTime: booking['serviceTime'],
+                        totalCost: booking['totalAmount'].toDouble(),
+                        imageUrl: booking[
+                            'imagePath'], // Use the image path from bookings
                       ),
                     );
                   },
@@ -187,6 +175,76 @@ class _mybookingState extends State<mybooking> {
                     style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ),
+    );
+  }
+}
+
+class BookingCard extends StatelessWidget {
+  final String serviceProvider;
+  final String bookingTime;
+  final String serviceTime;
+  final double totalCost;
+  final String imageUrl;
+
+  BookingCard({
+    required this.serviceProvider,
+    required this.bookingTime,
+    required this.serviceTime,
+    required this.totalCost,
+    required this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Service Provider: $serviceProvider',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text('Booking Time: $bookingTime'),
+                  SizedBox(height: 8),
+                  Text('Service Time: $serviceTime'),
+                  SizedBox(height: 8),
+                  Text(
+                    'Total Cost: ₹$totalCost',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 16),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Image.asset(
+                imageUrl,
+                width: 90,
+                height: 90,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
