@@ -31,12 +31,14 @@ class BookingDetailPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Booking Time Display
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: Text(
-                  'Booking Time: $bookingTime',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              // Centered Booking Time Display
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    'Booking Time: $bookingTime',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               Card(
