@@ -130,9 +130,7 @@ class _mybookingState extends State<mybooking> {
     return BaseScaffold(
       title: "My Bookings",
       body: isLoading
-          ? Center(
-              child:
-                  CircularProgressIndicator()) // Show loading indicator while fetching data
+          ? Center(child: CircularProgressIndicator())
           : bookings.isNotEmpty
               ? ListView.builder(
                   itemCount: bookings.length,
@@ -141,19 +139,20 @@ class _mybookingState extends State<mybooking> {
 
                     return GestureDetector(
                       onTap: () {
-                        // Navigate to the detailed booking page
+                        // Inside your GestureDetector onTap function
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => BookingDetailPage(
                               serviceProvider: booking['serviceProvider'],
-                              selectedService: booking[
-                                      'services'] // Pass the selected service
-                                  .map((service) => service['name'])
-                                  .join(", "), // Join service names
+                              services: booking[
+                                  'services'], // Pass the fetched services here
                               serviceDate: booking['serviceDate'],
                               serviceTime: booking['serviceTime'],
-                              totalCost: booking['totalAmount'].toDouble(),
+                              totalCost: booking['totalAmount']
+                                  .toDouble(), // Ensure the type is double
+                              bookingTime: booking[
+                                  'bookingTime'], // Pass the booking time
                             ),
                           ),
                         );
@@ -163,8 +162,7 @@ class _mybookingState extends State<mybooking> {
                         bookingTime: booking['bookingTime'],
                         serviceTime: booking['serviceTime'],
                         totalCost: booking['totalAmount'].toDouble(),
-                        imageUrl: booking[
-                            'imagePath'], // Use the image path from bookings
+                        imageUrl: booking['imagePath'],
                       ),
                     );
                   },
