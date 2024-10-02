@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Admin/admin_all_bookings.dart';
+import 'Emergency_call/emergancy_call_page.dart';
 import 'homescreen.dart'; // Import your home screen
 import 'services.dart'; // Import your service screen
 import 'mybookings.dart'; // Import your my bookings screen
@@ -57,7 +59,31 @@ class SideNavigationBar extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => mybooking(),
+                    builder: (context) => MyBooking(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.login),
+              title: const Text('Admin Login'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdminAllBooking(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.call),
+              title: const Text('Emergency Call'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EmergencyCalls(),
                   ),
                 );
               },

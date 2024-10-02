@@ -14,7 +14,8 @@ class BookingDetailPage extends StatelessWidget {
     this.serviceDate,
     this.serviceTime,
     required this.totalCost,
-    required this.bookingTime, // Include booking time in the constructor
+    required this.bookingTime,
+    required selectedService, // Include booking time in the constructor
   });
 
   @override
@@ -76,7 +77,6 @@ class BookingDetailPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              // Selected Services List
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),

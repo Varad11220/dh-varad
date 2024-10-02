@@ -44,7 +44,8 @@ class _ElectricianPageState extends State<ElectricianPage> {
         serviceItems.add(ServiceItem(
           name: widget.serviceOptions[i][j],
           price: widget.servicesCharge[i][j],
-          imagePath: 'assets/AC.png', // Use a default image or customize based on service
+          imagePath:
+              'assets/AC.png', // Use a default image or customize based on service
         ));
       }
     }
@@ -52,9 +53,12 @@ class _ElectricianPageState extends State<ElectricianPage> {
   }
 
   Future<void> _bookService() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('your_selected_service_name', widget.title.toString());
+    await prefs.setString(
+        'your_selected_service_name', widget.title.toString());
+
+// Convert the service options to ServiceItem and pass it
+    List<ServiceItem> selectedServices = _convertToServiceItems();
 
     Navigator.push(
       context,
@@ -99,7 +103,7 @@ class _ElectricianPageState extends State<ElectricianPage> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
-                  child: Image.asset(
+                  child: Image.network(
                     widget.imagePath,
                     height: 200,
                     width: double.infinity,

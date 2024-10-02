@@ -11,14 +11,28 @@ class BillSummaryPage extends StatefulWidget {
   final List<ServiceItem> selectedServices;
   final int subTotal;
   final DateTime selectedDateTime;
-  final String serviceImagePath; // New field for service image
+  final String serviceImagePath;
+  final String? clothingType;
+  final int turfHours;
+  final String? membershipType;
+  final List<ServiceItem> otherServices;
+  final int clothingPrices;
+  final int turfCharge;
+  final int membershipCharge;
 
   const BillSummaryPage({
     Key? key,
     required this.selectedServices,
     required this.subTotal,
     required this.selectedDateTime,
-    required this.serviceImagePath, // Initialize the new field
+    required this.serviceImagePath,
+    this.clothingType,
+    required this.turfHours,
+    this.membershipType,
+    required this.otherServices,
+    required this.clothingPrices,
+    required this.turfCharge,
+    required this.membershipCharge,
   }) : super(key: key);
 
   @override
@@ -106,6 +120,7 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
             ),
             const SizedBox(height: 6),
 
+            // Service Image
             Container(
               margin: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
@@ -117,7 +132,7 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20.0),
-                child: Image.asset(
+                child: Image.network(
                   widget.serviceImagePath,
                   height: 150,
                   width: double.infinity,
@@ -138,50 +153,176 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
 
             // List of selected services
             Expanded(
-              child: ListView.builder(
-                itemCount: widget.selectedServices.length,
-                itemBuilder: (context, index) {
-                  final service = widget.selectedServices[index];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
+              child: ListView(
+                children: [
+                  // List of selected services from the builder
+                  ...List.generate(widget.selectedServices.length, (index) {
+                    final service = widget.selectedServices[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16.0),
+                        leading: Icon(
+                          Icons.check_circle,
+                          color: Colors.blueAccent,
                         ),
-                      ],
+                        title: Text(
+                          service.name,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        trailing: Text(
+                          '₹ ${service.price}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+
+                  const SizedBox(height: 8),
+
+                  // Clothing Type
+                  if (widget.clothingType !=
+                      null) // Check if clothing type is selected
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16.0),
+                        leading: Icon(
+                          Icons.check_circle,
+                          color: Colors.blueAccent,
+                        ),
+                        title: Text(
+                          'Clothing Type: $widget.clothingType',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        trailing: Text(
+                          '₹ $widget.clothingPrices',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
                     ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16.0),
-                      leading: Icon(
-                        Icons.check_circle,
-                        color: Colors.blueAccent,
+
+                  // Turf Booking
+                  if (yourSelectedServiceName == 'Turf & Club' &&
+                      widget.turfHours >
+                          0) // Check if turf hours are greater than zero
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
                       ),
-                      title: Text(
-                        service.name,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16.0),
+                        leading: Icon(
+                          Icons.check_circle,
+                          color: Colors.blueAccent,
                         ),
-                      ),
-                      trailing: Text(
-                        '₹ ${service.price}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.green,
+                        title: Text(
+                          'Turf Booking for ${widget.turfHours} hour(s)',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        trailing: Text(
+                          '₹ ${widget.turfCharge}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                          ),
                         ),
                       ),
                     ),
-                  );
-                },
+
+                  const SizedBox(height: 8),
+
+                  // Membership Type
+                  if (widget.membershipType !=
+                      null) // Check if membership type is selected
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16.0),
+                        leading: Icon(
+                          Icons.check_circle,
+                          color: Colors.blueAccent,
+                        ),
+                        title: Text(
+                          'Membership Type: ${widget.membershipType}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        trailing: Text(
+                          '₹ ${widget.membershipCharge}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
 
             // Sub Total
             _buildSummaryRow(
@@ -244,7 +385,11 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
                       'subTotal': widget.subTotal,
                       'gst': gst,
                       'totalAmount': totalAmount,
+                      'clothingPrices': widget.clothingPrices,
+                      'turfCharge': widget.turfCharge,
+                      'membershipCharge': widget.membershipCharge,
                     },
+                    'clothingType': widget.clothingType,
                   }).then((_) async {
                     if (await _isPermissionGranted()) {
                       _sendMessage(
@@ -252,38 +397,24 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
                         "Your total bill is ₹ $totalAmount",
                       );
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text(
-                                "SMS permission is required to send the message.")),
+                      Fluttertoast.showToast(
+                        msg: "SMS permission not granted!",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
                       );
                     }
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Booking confirmed!')),
-                    );
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  }).catchError((error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text('Failed to confirm booking: $error')),
-                    );
                   });
+
+                  Navigator.popUntil(context, (route) => route.isFirst);
                 },
-                child: const Text(
-                  'Confirm Booking',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
                   backgroundColor: Colors.blueAccent,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
                 ),
+                child: const Text('Confirm Booking'),
               ),
             ),
           ],
@@ -292,7 +423,6 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
     );
   }
 
-  // Helper widget to build summary rows
   Widget _buildSummaryRow({
     required String label,
     required String value,
@@ -305,7 +435,6 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
           label,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.black,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
         ),
