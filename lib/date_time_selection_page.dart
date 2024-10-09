@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For formatting the date
-import 'electrician_booking.dart'; // Import the booking page
-import 'service_item.dart';
+import 'Services/electrician_booking.dart'; // Import the booking page
+import 'Services/service_item.dart';
 
 class DateTimeSelectionPage extends StatefulWidget {
   final String serviceName;

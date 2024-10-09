@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'basescaffold.dart';
+import '../Navigation/basescaffold.dart';
 
 class food extends StatefulWidget {
   const food({super.key});

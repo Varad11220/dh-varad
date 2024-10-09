@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 // Ensure this import matches the location of your file
 import 'service_item.dart';
-import 'date_time_selection_page.dart'; // Import the DateTimeSelectionPage
+import '../date_time_selection_page.dart'; // Import the DateTimeSelectionPage
 
 class ElectricianPage extends StatefulWidget {
   final String title;
@@ -45,7 +45,7 @@ class _ElectricianPageState extends State<ElectricianPage> {
           name: widget.serviceOptions[i][j],
           price: widget.servicesCharge[i][j],
           imagePath:
-              'assets/AC.png', // Use a default image or customize based on service
+          'assets/AC.png', // Use a default image or customize based on service
         ));
       }
     }

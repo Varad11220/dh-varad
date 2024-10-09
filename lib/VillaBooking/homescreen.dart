@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'basescaffold.dart';
+import '../Navigation/basescaffold.dart';
 
 class CarouselScreen extends StatefulWidget {
   @override

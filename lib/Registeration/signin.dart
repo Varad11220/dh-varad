@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:dh/signup.dart';
-import 'package:dh/homescreen.dart';
+import 'package:dh/Registeration/signup.dart';
+import 'package:dh/VillaBooking/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {

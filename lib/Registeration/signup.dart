@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:fluttertoast/fluttertoast.dart'; // Import the Fluttertoast package
 import 'package:shared_preferences/shared_preferences.dart';
-import 'UserModal/user_modal.dart';
-import 'homescreen.dart';
+import '../UserModal/user_modal.dart';
+import '../VillaBooking/homescreen.dart';
 // Import the UserModel
 import 'signin.dart';
 

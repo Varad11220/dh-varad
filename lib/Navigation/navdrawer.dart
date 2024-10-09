@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Admin/admin_all_bookings.dart';
-import 'Emergency_call/emergancy_call_page.dart';
-import 'homescreen.dart'; // Import your home screen
-import 'services.dart'; // Import your service screen
-import 'mybookings.dart'; // Import your my bookings screen
-import 'service_item.dart'; // Import your ServiceItem model
-import 'signin.dart'; // Import your sign-in screen
+import '../Admin/admin_all_bookings.dart';
+import '../Emergency_call/emergancy_call_page.dart';
+import '../Food/food.dart';
+import '../Food/food_call_book.dart';
+import '../VillaBooking/homescreen.dart'; // Import your home screen
+import '../Services/services.dart'; // Import your service screen
+import '../Services/mybookings.dart'; // Import your my bookings screen
+import '../Services/service_item.dart'; // Import your ServiceItem model
+import '../Registeration/signin.dart'; // Import your sign-in screen
 import 'basescaffold.dart'; // Import your BaseScaffold
 
 class SideNavigationBar extends StatelessWidget {
@@ -49,6 +51,16 @@ class SideNavigationBar extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => ServicesScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.restaurant),
+              title: const Text('Food'),
+              onTap: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => FoodCallBookPage()),
                 );
               },
             ),

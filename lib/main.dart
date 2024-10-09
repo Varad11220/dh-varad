@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:dh/signup.dart';
+import 'package:dh/Registeration/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'homescreen.dart'; // Import the CarouselScreen
+import 'VillaBooking/homescreen.dart'; // Import the CarouselScreen
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -360,7 +360,7 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
                   }
 
                   final dateTime =
-                      DateFormat('yyyy-MM-dd-HH:mm').format(DateTime.now());
+                  DateFormat('yyyy-MM-dd-HH:mm').format(DateTime.now());
 
                   final databaseRef = FirebaseDatabase.instance
                       .ref('serviceBooking/$userPhoneNumber')
@@ -370,17 +370,17 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
                     'servicesDetails': {
                       'services': widget.selectedServices
                           .map((service) => {
-                                'name': service.name,
-                                'price': service.price,
-                              })
+                        'name': service.name,
+                        'price': service.price,
+                      })
                           .toList(),
                       'serviceTime':
-                          DateFormat('HH:mm').format(widget.selectedDateTime),
+                      DateFormat('HH:mm').format(widget.selectedDateTime),
                       'serviceDate': DateFormat('yyyy-MM-dd')
                           .format(widget.selectedDateTime),
                     },
                     'bookingTime':
-                        DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
+                    DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
                     'cost': {
                       'subTotal': widget.subTotal,
                       'gst': gst,
@@ -390,6 +390,7 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
                       'membershipCharge': widget.membershipCharge,
                     },
                     'clothingType': widget.clothingType,
+                    'cancelBooking': false,
                   }).then((_) async {
                     if (await _isPermissionGranted()) {
                       _sendMessage(
