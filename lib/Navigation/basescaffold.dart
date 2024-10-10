@@ -19,7 +19,7 @@ class BaseScaffold extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: appBarActions != null ? [appBarActions!]: [],
+        actions: appBarActions != null ? [appBarActions!] : [],
       ),
       drawer: const SideNavigationBar(), // Navigation drawer
       body: body,

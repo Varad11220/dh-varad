@@ -213,7 +213,7 @@ class _DateTimePickerPageState extends State<DateTimePickerPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => FoodBillSummeryPage(
+                            builder: (context) => FoodBillSummaryPage(
                               cartItems: widget.cartItems, // Pass the cartItems
                               date: selectedDate, // Pass the selected date
                               time: selectedTime, // Pass the selected time
