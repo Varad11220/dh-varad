@@ -9,9 +9,8 @@ class FoodBooking extends StatefulWidget {
 }
 
 class _FoodBookingState extends State<FoodBooking> {
-  List<Map<String, dynamic>> bookings =
-      []; // List to store all orders with details
-  bool isLoading = true; // Flag to show loading indicator
+  List<Map<String, dynamic>> bookings = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -24,8 +23,8 @@ class _FoodBookingState extends State<FoodBooking> {
     final userPhoneNumber = prefs.getString('userPhoneNumber');
 
     if (userPhoneNumber != null) {
-      final databaseRef = FirebaseDatabase.instance
-          .ref('foodOrders/$userPhoneNumber'); // Update the path if needed
+      final databaseRef =
+          FirebaseDatabase.instance.ref('foodOrders/$userPhoneNumber');
       print('Fetching bookings for user: $userPhoneNumber');
 
       try {
@@ -47,8 +46,8 @@ class _FoodBookingState extends State<FoodBooking> {
                 final deliveryDate = booking['deliveryDate'] as String?;
                 final deliveryTime = booking['deliveryTime'] as String?;
                 final items = booking['orderDetails'] as List<dynamic>?;
-
-                // Extract GST amount with conversion
+                // final orderStatus = booking['status'] as String?;
+                final orderStatus = '2' as String?;
                 final gstAmount = (booking['gstAmount'] is int)
                     ? (booking['gstAmount'] as int).toDouble()
                     : booking['gstAmount'] as double?;
@@ -64,6 +63,7 @@ class _FoodBookingState extends State<FoodBooking> {
                     'grandTotal': (booking['grandTotal'] is int)
                         ? (booking['grandTotal'] as int).toDouble()
                         : booking['grandTotal'] as double?,
+                    'status': orderStatus,
                   });
                 }
               }
@@ -98,6 +98,36 @@ class _FoodBookingState extends State<FoodBooking> {
     }
   }
 
+  Color _getStatusColor(String? status) {
+    switch (status) {
+      case '1':
+        return Colors.blue; // Order Placed
+      case '2':
+        return Colors.orange; // In the Kitchen
+      case '3':
+        return Colors.yellow; // On the Way
+      case '4':
+        return Colors.green; // Delivered
+      default:
+        return Colors.grey; // Unknown status
+    }
+  }
+
+  String _getStatusText(String? status) {
+    switch (status) {
+      case '1':
+        return 'Order Placed';
+      case '2':
+        return 'In the Kitchen';
+      case '3':
+        return 'On the Way';
+      case '4':
+        return 'Delivered';
+      default:
+        return 'Unknown Status';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,6 +146,10 @@ class _FoodBookingState extends State<FoodBooking> {
                       deliveryDate: order['deliveryDate'] as String? ?? '',
                       deliveryTime: order['deliveryTime'] as String? ?? '',
                       orderDetails: order['items'] as List<dynamic>? ?? [],
+                      status: _getStatusText(
+                          order['status'] as String?), // Pass status text
+                      statusColor: _getStatusColor(
+                          order['status'] as String?), // Pass status color
                     );
                   },
                 )
@@ -137,6 +171,8 @@ class OrderCard extends StatelessWidget {
   final String deliveryDate;
   final String deliveryTime;
   final List<dynamic> orderDetails;
+  final String status; // New variable for order status
+  final Color statusColor; // New variable for order status color
 
   OrderCard({
     required this.orderTime,
@@ -146,18 +182,110 @@ class OrderCard extends StatelessWidget {
     required this.deliveryDate,
     required this.deliveryTime,
     required this.orderDetails,
+    required this.status,
+    required this.statusColor, // Initialize status color
   });
 
   @override
   Widget build(BuildContext context) {
-    // Debugging statement
-    print('Order Details: $orderDetails');
-
     // Number formatting for currency
     final currencyFormat =
         NumberFormat.currency(locale: 'en_IN', symbol: 'Rs ', decimalDigits: 2);
 
-    // Helper function to parse price strings
+    return GestureDetector(
+      onTap: () {
+        // Navigate to order details page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => OrderDetailsPage(
+              orderTime: orderTime,
+              deliveryDate: deliveryDate,
+              deliveryTime: deliveryTime,
+              orderDetails: orderDetails,
+              gstAmount: gstAmount,
+              grandTotal: grandTotal,
+              status: status, // Pass status
+            ),
+          ),
+        );
+      },
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 4,
+        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Order Time: $orderTime',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text('Delivery Date: $deliveryDate',
+                  style: TextStyle(fontSize: 16)),
+              SizedBox(height: 8),
+              Text('Delivery Time: $deliveryTime',
+                  style: TextStyle(fontSize: 16)),
+              SizedBox(height: 8),
+              Text(
+                'Grand Total: ${currencyFormat.format(grandTotal)}',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Status: $status',
+                    style: TextStyle(color: statusColor, fontSize: 16),
+                  ),
+                  Icon(Icons.arrow_forward, color: Colors.grey),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class OrderDetailsPage extends StatelessWidget {
+  final String orderTime;
+  final String deliveryDate;
+  final String deliveryTime;
+  final List<dynamic> orderDetails;
+  final double gstAmount;
+  final double grandTotal;
+  final String status;
+
+  OrderDetailsPage({
+    required this.orderTime,
+    required this.deliveryDate,
+    required this.deliveryTime,
+    required this.orderDetails,
+    required this.gstAmount,
+    required this.grandTotal,
+    required this.status,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Number formatting for currency
+    final currencyFormat =
+        NumberFormat.currency(locale: 'en_IN', symbol: 'Rs ', decimalDigits: 2);
     double parsePrice(String price) {
       // Remove "Rs " prefix and any non-numeric characters
       return double.tryParse(price
@@ -167,29 +295,23 @@ class OrderCard extends StatelessWidget {
           0.0;
     }
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Order Details'),
       ),
-      elevation: 2,
-      child: Padding(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Order Time: $orderTime',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
+            Text('Order Time: $orderTime', style: TextStyle(fontSize: 16)),
             SizedBox(height: 8),
-            Text('Delivery Date: $deliveryDate'),
+            Text('Delivery Date: $deliveryDate',
+                style: TextStyle(fontSize: 16)),
             SizedBox(height: 8),
-            Text('Delivery Time: $deliveryTime'),
+            Text('Delivery Time: $deliveryTime',
+                style: TextStyle(fontSize: 16)),
             SizedBox(height: 16),
-            // Receipt-like format for order details
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -244,6 +366,7 @@ class OrderCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 16),
+            Text('Status: $status', style: TextStyle(fontSize: 16)),
           ],
         ),
       ),
