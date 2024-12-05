@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class FoodDetailPage extends StatelessWidget {
   final String orderTime;
