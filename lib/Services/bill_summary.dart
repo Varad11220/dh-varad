@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart'; // Ensure Firebase is
 import 'package:background_sms/background_sms.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fluttertoast/fluttertoast.dart'; // Import the Fluttertoast package
+import 'package:dh/emailer.dart';
 
 class BillSummaryPage extends StatefulWidget {
   final List<ServiceItem> selectedServices;
@@ -359,57 +360,100 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
                     return;
                   }
 
-                  final dateTime =
-                  DateFormat('yyyy-MM-dd-HH:mm').format(DateTime.now());
+                  try {
+                    final userRef = FirebaseDatabase.instance
+                        .ref('userdata/$userPhoneNumber');
+                    final snapshot = await userRef.get();
 
-                  final databaseRef = FirebaseDatabase.instance
-                      .ref('serviceBooking/$userPhoneNumber')
-                      .child(dateTime);
-                  await databaseRef.set({
-                    'service_provider': yourSelectedServiceName,
-                    'servicesDetails': {
-                      'services': widget.selectedServices
-                          .map((service) => {
-                        'name': service.name,
-                        'price': service.price,
-                      })
-                          .toList(),
-                      'serviceTime':
-                      DateFormat('HH:mm').format(widget.selectedDateTime),
-                      'serviceDate': DateFormat('yyyy-MM-dd')
-                          .format(widget.selectedDateTime),
-                    },
-                    'bookingTime':
-                    DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
-                    'cost': {
-                      'subTotal': widget.subTotal,
-                      'gst': gst,
-                      'totalAmount': totalAmount,
-                      'clothingPrices': widget.clothingPrices,
-                      'turfCharge': widget.turfCharge,
-                      'membershipCharge': widget.membershipCharge,
-                    },
-                    'clothingType': widget.clothingType,
-                    'cancelBooking': false,
-                  }).then((_) async {
-                    if (await _isPermissionGranted()) {
-                      _sendMessage(
-                        userPhoneNumber!,
-                        "Your total bill is ₹ $totalAmount",
+                    if (!snapshot.exists || snapshot.value == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('User data not found')),
                       );
-                    } else {
-                      Fluttertoast.showToast(
-                        msg: "SMS permission not granted!",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
-                      );
+                      return;
                     }
-                  });
 
-                  Navigator.popUntil(context, (route) => route.isFirst);
+                    final userData = snapshot.value as Map<Object?, Object?>;
+                    final userEmail = userData['email'] as String?;
+
+                    if (userEmail == null || userEmail.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('User email not found')),
+                      );
+                      return;
+                    }
+
+                    if (yourSelectedServiceName == null ||
+                        yourSelectedServiceName!.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Service name not selected')),
+                      );
+                      return;
+                    }
+
+                    final dateTime =
+                        DateFormat('yyyy-MM-dd-HH:mm').format(DateTime.now());
+
+                    final databaseRef = FirebaseDatabase.instance
+                        .ref('serviceBooking/$userPhoneNumber')
+                        .child(dateTime);
+
+                    await databaseRef.set({
+                      'service_provider': yourSelectedServiceName,
+                      'servicesDetails': {
+                        'services': widget.selectedServices
+                            .map((service) => {
+                                  'name': service.name,
+                                  'price': service.price,
+                                })
+                            .toList(),
+                        'serviceTime':
+                            DateFormat('HH:mm').format(widget.selectedDateTime),
+                        'serviceDate': DateFormat('yyyy-MM-dd')
+                            .format(widget.selectedDateTime),
+                      },
+                      'bookingTime':
+                          DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
+                      'cost': {
+                        'subTotal': widget.subTotal,
+                        'gst': gst,
+                        'totalAmount': totalAmount,
+                        'clothingPrices': widget.clothingPrices,
+                        'turfCharge': widget.turfCharge,
+                        'membershipCharge': widget.membershipCharge,
+                      },
+                      'clothingType': widget.clothingType,
+                      'cancelBooking': false,
+                    }).then((_) async {
+                      await sendBookingEmail(
+                        recipient: userEmail,
+                        bookingDateTime: DateFormat('yyyy-MM-dd HH:mm')
+                            .format(DateTime.now()),
+                        serviceType: yourSelectedServiceName!,
+                        services: widget.selectedServices
+                            .map((service) => {
+                                  'name': service.name.toString(),
+                                  'price': service.price.toString(),
+                                })
+                            .toList(),
+                        serviceTime:
+                            DateFormat('HH:mm').format(widget.selectedDateTime),
+                        subtotal: widget.subTotal.toInt(),
+                        gst: gst.toInt(),
+                        totalAmount: totalAmount.toInt(),
+                        clothingPrice: widget.clothingPrices?.toInt() ?? 0,
+                        turfCharge: widget.turfCharge?.toInt() ?? 0,
+                        membership: widget.membershipCharge?.toInt() ?? 0,
+                        clothingType: widget.clothingType ?? '',
+                      );
+                    });
+
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error: ${e.toString()}')),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -417,7 +461,7 @@ class _BillSummaryPageState extends State<BillSummaryPage> {
                 ),
                 child: const Text('Confirm Booking'),
               ),
-            ),
+            )
           ],
         ),
       ),

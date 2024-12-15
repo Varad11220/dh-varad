@@ -103,8 +103,10 @@ class BookingDetailPage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 8),
-                      Text(selectedService,
-                        style: TextStyle(fontSize: 14, height: 1.5),),
+                      Text(
+                        selectedService,
+                        style: TextStyle(fontSize: 14, height: 1.5),
+                      ),
                       ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -157,59 +159,59 @@ class BookingDetailPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: showCancelButton && !isCancelled// Show button based on the flag
+      bottomNavigationBar: showCancelButton &&
+              !isCancelled // Show button based on the flag
           ? Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              // Show confirmation dialog
-              showDialog(
-                context: context,
-                builder: (context) =>
-                    AlertDialog(
-                      title: Text('Confirm Cancellation'),
-                      content: Text(
-                          'Are you sure you want to cancel this booking?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            // Handle the cancellation logic here
-                            cancelBooking(); // Call the function to cancel the booking
-                            Navigator.of(context).pop(); // Close the dialog
-                            Navigator.of(context)
-                                .pop(); // Navigate back to My Bookings page
-                          },
-                          child: Text('Yes'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
-                          child: Text('No'),
-                        ),
-                      ],
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Show confirmation dialog
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Confirm Cancellation'),
+                        content: Text(
+                            'Are you sure you want to cancel this booking?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              // Handle the cancellation logic here
+                              cancelBooking(); // Call the function to cancel the booking
+                              Navigator.of(context).pop(); // Close the dialog
+                              Navigator.of(context)
+                                  .pop(); // Navigate back to My Bookings page
+                            },
+                            child: Text('Yes'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Close the dialog
+                            },
+                            child: Text('No'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14.0),
+                    backgroundColor: Colors.red.shade500,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(21.0),
                     ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14.0),
-              backgroundColor: Colors.red.shade500,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(21.0),
+                  ),
+                  child: const Text(
+                    'Cancel Booking',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
-            ),
-            child: const Text(
-              'Cancel Booking',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      )
+            )
           : null, // Don't show anything if showCancelButton is false
     );
   }
@@ -235,7 +237,8 @@ class BookingDetailPage extends StatelessWidget {
           final booking = entry.value as Map<dynamic, dynamic>?;
           if (booking != null) {
             // Normalize the bookingTime from the database for comparison
-            final dbBookingTime = (booking['bookingTime'] as String).replaceAll('-', ' ');
+            final dbBookingTime =
+                (booking['bookingTime'] as String).replaceAll('-', ' ');
 
             if (dbBookingTime == normalizedBookingTime) {
               bookingKeyToUpdate = entry.key;

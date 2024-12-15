@@ -97,7 +97,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
         _selectedServices.add(otherService);
         _currentCharge += otherService.price;
         _showOtherTextField =
-        false; // Hide the text fields after adding "Other"
+            false; // Hide the text fields after adding "Other"
       });
     }
   }
@@ -235,7 +235,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                             onTap: () {
                               setState(() {
                                 _showClothingOptions =
-                                !_showClothingOptions; // Toggle visibility
+                                    !_showClothingOptions; // Toggle visibility
                               });
                             },
                             child: Text(
@@ -253,7 +253,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                                 return CheckboxListTile(
                                   title: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(option),
                                       Text(
@@ -266,7 +266,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                                     setState(() {
                                       if (isChecked ?? false) {
                                         _currentCharge +=
-                                        _clothingPrices[option]!;
+                                            _clothingPrices[option]!;
                                         _selectedServices.add(ServiceItem(
                                           name: option,
                                           price: _clothingPrices[option]!,
@@ -274,10 +274,10 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                                         ));
                                       } else {
                                         _currentCharge -=
-                                        _clothingPrices[option]!;
+                                            _clothingPrices[option]!;
                                         _selectedServices.removeWhere(
-                                                (service) =>
-                                            service.name == option);
+                                            (service) =>
+                                                service.name == option);
                                       }
                                     });
                                   },
@@ -295,7 +295,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                             onTap: () {
                               setState(() {
                                 _showTurfHours =
-                                !_showTurfHours; // Toggle visibility
+                                    !_showTurfHours; // Toggle visibility
                               });
                             },
                             child: Text(
@@ -350,13 +350,13 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                         if (isClubService) ...[
                           GestureDetector(
                             onTap: _selectedMembership ==
-                                null // Disable tapping if a membership is selected
+                                    null // Disable tapping if a membership is selected
                                 ? () {
-                              setState(() {
-                                _showMembershipOptions =
-                                !_showMembershipOptions; // Toggle visibility
-                              });
-                            }
+                                    setState(() {
+                                      _showMembershipOptions =
+                                          !_showMembershipOptions; // Toggle visibility
+                                    });
+                                  }
                                 : null, // Disable tap when a membership is selected
                             child: Text(
                               _showMembershipOptions
@@ -366,7 +366,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                                 color: _selectedMembership == null
                                     ? Colors.blue
                                     : Colors
-                                    .grey, // Make it blue if no membership selected, grey otherwise
+                                        .grey, // Make it blue if no membership selected, grey otherwise
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -377,7 +377,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                                 return CheckboxListTile(
                                   title: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(option),
                                       Text(
@@ -390,12 +390,12 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                                       if (isChecked ?? false) {
                                         if (_selectedMembership != null) {
                                           _currentCharge -= _membershipPrices[
-                                          _selectedMembership]!;
+                                              _selectedMembership]!;
                                         }
                                         // A checkbox is selected
                                         _selectedMembership = option;
                                         _currentCharge +=
-                                        _membershipPrices[option]!;
+                                            _membershipPrices[option]!;
 
                                         // Disable "Show Membership Options" and make it gray
                                         _showMembershipOptions = true;
@@ -403,7 +403,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                                         // If the same option is unchecked, allow "Show Membership Options" to be clickable again
                                         if (_selectedMembership == option) {
                                           _currentCharge -=
-                                          _membershipPrices[option]!;
+                                              _membershipPrices[option]!;
                                           _selectedMembership = null;
                                           // Hide the options
                                         }
@@ -426,7 +426,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
             Card(
               color: const Color(0xFFE6EAFF),
               margin:
-              const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
               elevation: 4,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -456,7 +456,7 @@ class _ElectricianBookingPageState extends State<ElectricianBookingPage> {
                     Expanded(
                       child: TextField(
                         decoration:
-                        const InputDecoration(labelText: "Service Name"),
+                            const InputDecoration(labelText: "Service Name"),
                         onChanged: (value) {
                           setState(() {
                             _otherServiceName = value;

@@ -61,6 +61,7 @@ dev_dependencies:
   background_sms: ^0.0.4
   permission_handler: ^10.2.0
   fluttertoast: ^8.0.9
+  http: ^1.2.2
 
 
 # For information on the generic Dart part of this file, see the
